@@ -2,9 +2,7 @@ package urlgen
 
 import (
 	"fmt"
-	"html/template"
 	"net/url"
-	"os"
 	"strings"
 	"testing"
 )
@@ -16,19 +14,6 @@ func ExampleURL() {
 	fmt.Print(u.String())
 	// Output:
 	// /hello/Jane+%26+Jon
-}
-
-func ExampleURLInTemplate() {
-	r, _ := url.Parse("/hello/:name")
-	g := New(Routes{"hello": r})
-	f := func(name string, params map[string]string) (string, error) {
-		u, err := g.URL(name, params)
-		return u.String(), err
-	}
-	t := template.Must(template.New("hello").Funcs(template.FuncMap{"url": f}).Parse(`<a href="{{url "hello" .}}">Hello</a>`))
-	t.Execute(os.Stdout, map[string]string{"name": "Jane & Jon"})
-	// Output:
-	// <a href="/hello/Jane&#43;%26&#43;Jon">Hello</a>
 }
 
 func TestUrl(t *testing.T) {

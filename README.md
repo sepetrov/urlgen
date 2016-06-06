@@ -9,26 +9,45 @@ the routes can have a named parameters in the format `:<parameter name>`.
 ## Usage
 
 ```go
-route, _ := url.Parse("/hello/:name")
-generator := urlgen.New(urlgen.Routes{"hello": route})
-helloUrl, _ := generator.URL("hello", Params{"name": "Jane & Jon"}) // returns *url.URL, error
-fmt.Print(helloUrl.String())
-// Output:
-// /hello/Jane+%26+Jon
+package main
+
+import (
+	"fmt"
+	"github.com/sepetrov/urlgen"
+	"net/url"
+)
+
+func main() {
+	route, _ := url.Parse("/hello/:name")
+	generator := urlgen.New(urlgen.Routes{"hello": route})
+	helloUrl, _ := generator.URL("hello", urlgen.Params{"name": "Jane & Jon"})
+	fmt.Print(helloUrl.String())
+	// Output:
+	// /hello/Jane+%26+Jon
+}
 ```
 
-The generator can also be used as a template helper.
+Using the template helper function to generate URL.
 ```go
-route, _ := url.Parse("/hello/:name")
-generator := urlgen.New(urlgen.Routes{"hello": r})
-urlHelper := func(name string, params map[string]string) (string, error) {
-	u, err := g.URL(name, params) // returns *url.URL, error
-	return u.String(), err
+package main
+
+import (
+	"github.com/sepetrov/urlgen"
+	"html/template"
+	"net/url"
+	"os"
+)
+
+func main() {
+	route, _ := url.Parse("/hello/:name")
+	generator := urlgen.New(urlgen.Routes{"hello": route})
+	helper := urlgen.TemplateFunc(generator)
+	markup := `<a href="{{url "hello" "name" "Jane & Jon"}}">Hello</a>`
+	tmpl := template.Must(template.New("foo").Funcs(template.FuncMap{"url": helper}).Parse(markup))
+	tmpl.Execute(os.Stdout, nil)
+	// Output:
+	// <a href="/hello/Jane&#43;%26&#43;Jon">Hello</a>
 }
-tmpl := template.Must(template.New("hello").Funcs(template.FuncMap{"url": urlHelper}).Parse(`<a href="{{url "hello" .}}">Hello</a>`))
-tmpl.Execute(os.Stdout, map[string]string{"name": "Jane & Jon"})
-// Output:
-// <a href="/hello/Jane&#43;%26&#43;Jon">Hello</a>
 ```
 
 ## License
