@@ -8,7 +8,7 @@ type templateHelperFunc func(string, ...string) (string, error)
 
 // TemplateFunc is an adapter, which wraps a URL generator and returns a
 // template helper function.
-func TemplateFunc(g *URLGen) templateHelperFunc {
+func TemplateFunc(g URLGen) templateHelperFunc {
 	return func(name string, params ...string) (string, error) {
 		l := len(params)
 		if l%2 != 0 {

@@ -24,19 +24,24 @@ type Routes map[string]*url.URL
 // The values must not be encoded.
 type Params map[string]string
 
-// URLGen is a URL generator.
-type URLGen struct {
+// URLGen is a URL generator interface.
+type URLGen interface {
+	URL(name string, params Params) (*url.URL, error)
+}
+
+// URLGen is the URL generator.
+type gen struct {
 	routes Routes
 }
 
 // New returns a new URL generator for the routes r.
-func New(r Routes) *URLGen {
-	return &URLGen{routes: r}
+func New(r Routes) *gen {
+	return &gen{routes: r}
 }
 
 // URL returns the URL and nil error, if it successfully finds a route with
 // name and replaces the route params. It returns an error on failure.
-func (g *URLGen) URL(name string, params Params) (*url.URL, error) {
+func (g *gen) URL(name string, params Params) (*url.URL, error) {
 	u, ok := g.routes[name]
 	if !ok {
 		var names []string
