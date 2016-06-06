@@ -1,6 +1,7 @@
 package urlgen
 
 import (
+	"bytes"
 	"html/template"
 	"net/url"
 	"os"
@@ -65,5 +66,33 @@ func TestTemplateFunc(t *testing.T) {
 		if (err == nil) && test.err {
 			t.Errorf("#%d TemplateFunc(): got error %v, want %v", i, u, test.url)
 		}
+	}
+}
+
+func TestTemplateFuncHTML(t *testing.T) {
+	route0, _ := url.Parse("/")
+	route1, _ := url.Parse("/:foo")
+	route2, _ := url.Parse("/:foo/:bar")
+	route3, _ := url.Parse("/:foo/:bar/:baz")
+	generator := New(Routes{
+		"zero":  route0,
+		"one":   route1,
+		"two":   route2,
+		"three": route3,
+	})
+	helper := TemplateFunc(generator)
+	markup := `{{url "zero"}}
+{{url "one" "foo" "FOO"}}
+{{url "two" "foo" "FOO" "bar" "BAR"}}
+{{url "three" "foo" "FOO" "bar" "BAR" "baz" "BAZ"}}`
+	tmpl := template.Must(template.New("foo").Funcs(template.FuncMap{"url": helper}).Parse(markup))
+	buf := new(bytes.Buffer)
+	tmpl.Execute(buf, nil)
+	want := `/
+/FOO
+/FOO/BAR
+/FOO/BAR/BAZ`
+	if got := buf.String(); got != want {
+		t.Errorf("TemplateFunc(): got template output\n\n%s\n\nwant\n\n%s\n", got, want)
 	}
 }
