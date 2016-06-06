@@ -10,7 +10,7 @@ the routes can have a named parameters in the format `:<parameter name>`.
 
 ```go
 route, _ := url.Parse("/hello/:name")
-generator := urlgen.New(Routes{"hello": route})
+generator := urlgen.New(urlgen.Routes{"hello": route})
 helloUrl, _ := generator.URL("hello", Params{"name": "Jane & Jon"}) // returns *url.URL, error
 fmt.Print(helloUrl.String())
 // Output:
@@ -20,7 +20,7 @@ fmt.Print(helloUrl.String())
 The generator can also be used as a template helper.
 ```go
 route, _ := url.Parse("/hello/:name")
-generator := urlgen.New(Routes{"hello": r})
+generator := urlgen.New(urlgen.Routes{"hello": r})
 urlHelper := func(name string, params map[string]string) (string, error) {
 	u, err := g.URL(name, params) // returns *url.URL, error
 	return u.String(), err
