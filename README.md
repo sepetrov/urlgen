@@ -1,7 +1,6 @@
 # urlgen
 
 [![Build Status](https://travis-ci.org/sepetrov/urlgen.svg?branch=master)](https://travis-ci.org/sepetrov/urlgen)
-
 [![codecov](https://codecov.io/gh/sepetrov/urlgen/branch/master/graph/badge.svg)](https://codecov.io/gh/sepetrov/urlgen)
 
 
