@@ -1,6 +1,6 @@
 # urlgen
 
-[![Build Status](https://travis-ci.org/sepetrov/urlgen.svg?branch=travis)](https://travis-ci.org/sepetrov/urlgen)
+[![Build Status](https://travis-ci.org/sepetrov/urlgen.svg?branch=master)](https://travis-ci.org/sepetrov/urlgen)
 
 Go URL generator.
 
